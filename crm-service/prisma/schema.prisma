@@ -1,0 +1,81 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Customer {
+  id             String          @id @default(uuid())
+  name           String
+  email          String          @unique
+  phone          String
+  city           String
+  age            Int
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  orders         Order[]
+  communications Communication[]
+}
+
+model Order {
+  id         String   @id @default(uuid())
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  amount     Float
+  orderDate  DateTime @default(now())
+}
+
+model Segment {
+  id          String     @id @default(uuid())
+  name        String
+  description String?
+  rules       Json       // rules format: { spend?: { gt?: number, lt?: number }, age?: { gt?: number, lt?: number }, city?: string, inactiveDays?: number }
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  campaigns   Campaign[]
+}
+
+model Campaign {
+  id             String          @id @default(uuid())
+  name           String
+  segmentId      String
+  segment        Segment         @relation(fields: [segmentId], references: [id])
+  channel        String          // WHATSAPP, SMS, EMAIL, RCS
+  message        String
+  status         String          // DRAFT, SENDING, SENT, COMPLETED, FAILED
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  communications Communication[]
+}
+
+model Communication {
+  id         String   @id @default(uuid())
+  campaignId String
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  status     String   // SENT, DELIVERED, FAILED, OPENED, CLICKED
+  sentAt     DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  events     Event[]
+}
+
+model Event {
+  id              String        @id @default(uuid())
+  communicationId String
+  communication   Communication @relation(fields: [communicationId], references: [id], onDelete: Cascade)
+  eventType       String        // SENT, DELIVERED, FAILED, OPENED, CLICKED, CONVERTED
+  createdAt       DateTime      @default(now())
+}

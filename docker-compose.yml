@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: smartreach_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: smartreach_crm
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  crm-service:
+    build:
+      context: ./crm-service
+      dockerfile: Dockerfile
+    container_name: smartreach_crm_service
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - DATABASE_URL=postgresql://postgres:postgrespassword@postgres:5432/smartreach_crm?schema=public
+      - JWT_SECRET=smartreach_super_secret_jwt_key_12345
+      - CHANNEL_SERVICE_URL=http://channel-service:5001
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      - postgres
+
+  channel-service:
+    build:
+      context: ./channel-service
+      dockerfile: Dockerfile
+    container_name: smartreach_channel_service
+    restart: always
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+      - CRM_SERVICE_URL=http://crm-service:5000
+    depends_on:
+      - crm-service
+
+volumes:
+  postgres_data:

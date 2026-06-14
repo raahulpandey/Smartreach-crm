@@ -1,0 +1,5 @@
+PORT=5000
+DATABASE_URL=postgresql://postgres:postgrespassword@localhost:5432/smartreach_crm?schema=public
+JWT_SECRET=smartreach_super_secret_jwt_key_12345
+CHANNEL_SERVICE_URL=http://localhost:5001
+OPENAI_API_KEY=

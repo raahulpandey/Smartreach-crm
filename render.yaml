@@ -1,0 +1,36 @@
+services:
+  # ─── CRM Core API ─────────────────────────────────────
+  - type: web
+    name: smartreach-crm-api
+    runtime: node
+    rootDir: crm-service
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npx prisma db push && node dist/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: DATABASE_URL
+        sync: false          # set manually in Render dashboard
+      - key: JWT_SECRET
+        sync: false          # set manually in Render dashboard
+      - key: CHANNEL_SERVICE_URL
+        sync: false          # set to the channel-service Render URL after deploy
+      - key: OPENAI_API_KEY
+        sync: false          # optional: set for real AI, leave blank for heuristics
+
+  # ─── Channel Delivery Simulator ───────────────────────
+  - type: web
+    name: smartreach-channel-simulator
+    runtime: node
+    rootDir: channel-service
+    buildCommand: npm install && npm run build
+    startCommand: node dist/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5001
+      - key: CRM_SERVICE_URL
+        sync: false          # set to the crm-api Render URL after deploy
