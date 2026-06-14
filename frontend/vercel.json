@@ -4,10 +4,5 @@
   "framework": "vite",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
-  ],
-  "env": {
-    "VITE_API_URL": {
-      "description": "The full base URL of the deployed CRM API (e.g. https://smartreach-crm-api.onrender.com/api)"
-    }
-  }
+  ]
 }
