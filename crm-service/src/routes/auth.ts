@@ -45,7 +45,7 @@ router.post('/register', async (req: AuthenticatedRequest, res: Response) => {
       { expiresIn: '24h' }
     );
 
-    return res.status(214).json({
+    return res.status(201).json({
       token,
       user: {
         id: user.id,

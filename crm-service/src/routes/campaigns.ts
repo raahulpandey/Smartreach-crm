@@ -112,7 +112,7 @@ router.post('/', authenticateJWT, async (req: AuthenticatedRequest, res: Respons
       }
     });
 
-    return res.status(214).json(campaign);
+    return res.status(201).json(campaign);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: error.errors[0].message });

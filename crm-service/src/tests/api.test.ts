@@ -21,7 +21,7 @@ async function runTests() {
       email: testEmail,
       password: 'securepassword123'
     });
-    assert.strictEqual(registerRes.status, 214);
+    assert.strictEqual(registerRes.status, 201);
     assert.ok(registerRes.data.token);
     assert.strictEqual(registerRes.data.user.email, testEmail);
     console.log('✅ User Registration passed.');
@@ -48,7 +48,7 @@ async function runTests() {
       city: 'MegaCity',
       age: 40
     }, { headers });
-    assert.strictEqual(custRes.status, 214);
+    assert.strictEqual(custRes.status, 201);
     assert.ok(custRes.data.id);
     customerId = custRes.data.id;
     console.log('✅ Customer Creation passed.');
@@ -79,7 +79,7 @@ async function runTests() {
       description: 'Customers residing in MegaCity above age 30',
       rules: parseRes.data.rules
     }, { headers });
-    assert.strictEqual(segRes.status, 214);
+    assert.strictEqual(segRes.status, 201);
     assert.ok(segRes.data.id);
     segmentId = segRes.data.id;
     console.log('✅ Segment Saving passed.');
@@ -92,7 +92,7 @@ async function runTests() {
       channel: 'SMS',
       message: 'Hello [Customer Name], welcome back to MegaCity. Terminate Zion now.'
     }, { headers });
-    assert.strictEqual(campRes.status, 214);
+    assert.strictEqual(campRes.status, 201);
     assert.ok(campRes.data.id);
     assert.strictEqual(campRes.data.status, 'DRAFT');
     campaignId = campRes.data.id;

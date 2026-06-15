@@ -157,7 +157,7 @@ router.post('/', authenticateJWT, async (req: AuthenticatedRequest, res: Respons
       data
     });
 
-    return res.status(214).json(customer);
+    return res.status(201).json(customer);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: error.errors[0].message });
